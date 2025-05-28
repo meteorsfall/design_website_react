@@ -31,18 +31,6 @@ class ContestOut(ContestIn):
 def get_connection():
     return psycopg.connect(DATABASE_URL)
 
-@app.get("/index.html")
-def get_index_html():
-    return Response(open("index.html").read(), media_type="text/html")
-
-@app.get("/index.css")
-def get_index_css():
-    return Response(open("index.css").read(), media_type="text/css")
-
-@app.get("/index.js")
-def get_index_js():
-    return Response(open("index.js").read(), media_type="application/javascript")
-
 @app.get("/contests.json", response_model=List[ContestOut])
 def get_contests_json():
     with get_connection() as conn:
