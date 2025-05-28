@@ -7,17 +7,21 @@ export default function ShowContests() {
   const [contests, setContests] = useState([]);
   //for the poll button
   const [showForm, setShowForm] = useState(false)
+  const API_URL = "http://localhost:8000";
 
-  useEffect(() => {
-    fetch('http://localhost:8000/contests.json')
-        .then(r => r.json())
-        .then(data => {
-            const contests = data
-            console.log(contests);
-            setContests(contests)
-        })
-        .catch(error => console.error('Error:', error));
-  }, []);
+  function fetchContests() {
+    fetch(`${API_URL}/contests.json`)
+      .then(r => r.json())
+      .then(data => {
+          const contests = data
+          console.log(contests);
+          setContests(contests)
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  useEffect(() => {fetchContests()
+      }, []);
 
   function WatchButton() {
     const[watching, setWatching] = useState(false)
@@ -92,7 +96,52 @@ export default function ShowContests() {
         ...form,
         [e.target.name]: e.target.value
       });
-    }
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      const newData = {
+        ...form,
+        tags: [],
+        days: 0,
+        designs: 0
+      };
+
+      try {
+        const res = await fetch(`${API_URL}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newData)
+        });
+
+        if (res.ok) {
+          alert('Submission saved!');
+          setForm({title:'', author:'', description:''});
+          onSuccess();
+        } else {
+          const err = await res.text();
+          console.error('Backend error:', err);
+          alert("Submission failed." + err);
+        }
+      } catch (err) {
+        console.error('Error submitting form:', err);
+        alert('Error submitting form.' + err.message);
+      }
+    };
+
+    return (
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="title">Title</label><br />
+        <input type="text" id="title" name="title" value={form.title} onChange={handleChange} /><br />
+        <label htmlFor="author">Author</label> <br />
+        <input type="text" id="author" name="author"  value={form.author} onChange={handleChange} /><br />
+        <label htmlFor="description">Description</label><br />
+        <input type="text" id="description" name="description" value={form.description} onChange={handleChange} /><br /> <br />
+        <input type="submit" value="Post" />
+      </form>
+
+    )
 
   }
 
@@ -117,16 +166,8 @@ export default function ShowContests() {
           Add Post
     </div>
     <div id="add-post-form" style={{'marginTop': '5em', 'marginLeft': '45%', 'display': showForm ? 'block' : 'none'}}>
-            <form action="http://localhost:8000/submit" method="post">
-              <label htmlFor="title">Title</label><br />
-              <input type="text" id="title" name="title" /><br />
-              <label htmlFor="author">Author</label> <br />
-              <input type="text" id="author" name="author" /><br />
-              <label htmlFor="description">Description</label><br />
-              <input type="text" id="description" name="description" /><br /> <br />
-              <input type="submit" value="Post" />
-            </form>
-          </div>
+      <AddPostForm onSuccess = {() => fetchContests()} />
+    </div>
     </>
   )
 }
