@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Provider, useSelector, useDispatch} from 'react-redux';
 import { toggleDropdown, closeAllDropdowns } from '../store/store';
 import {Dropdown, ContestStatus, Icon2} from './Dropdown'
+import { API_URL } from './constants';
 
 export default function ShowContests() {
   const [contests, setContests] = useState([]);
   //for the poll button
   const [showForm, setShowForm] = useState(false)
-  const API_URL = "http://localhost:8000";
 
   function fetchContests() {
     fetch(`${API_URL}/contests.json`)

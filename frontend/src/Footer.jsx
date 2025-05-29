@@ -2,13 +2,15 @@ import React from 'react';
 
 export default function Footer(){
 
-  const page_link = (text) => (
-    <div>
-      <a href = "#" >
-        <p> {text} </p>
-      </a>
-    </div>
-  )
+  function PageLink({text}) {
+    return (
+      <div>
+        <a href = "#" >
+          <p> {text} </p>
+        </a>
+      </div>
+    )
+  }
 
   return (
     <div style={{
@@ -63,13 +65,13 @@ export default function Footer(){
           marginBottom: '0em',
           color: '#FFFFFF',
           fontSize: '1.3em'}}>
-          {page_link("HOME")}
+          <PageLink text="HOME" />
           <p> | </p>
-          {page_link("JOBS")}
+          <PageLink text="JOBS" />
           <p> | </p>
-          {page_link("LOGIN")}
+          <PageLink text="LOGIN" />
           <p> | </p>
-          {page_link("REGISTER")}
+          <PageLink text="REGISTER" />
         </div>
       </div>
   );

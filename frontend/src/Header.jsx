@@ -1,16 +1,12 @@
 // Header.jsx
-import React from 'react';
+import React, {useState} from 'react';
 
 export default function Header() {
-  const showMessages = () => {
-    const messages = document.getElementById('messages');
-    if (messages) {
-      messages.style.display = messages.style.display === 'none' ? 'flex' : 'none';
-    }
-  };
+  const [showMessages, setShowMessages] = useState(false)
 
-  const message = (showBorder) => (
-    <div
+  function Message({showBorder}) {
+    return (
+      <div
         className="message"
         id="message"
     style={{ display: 'flex', flexDirection: 'row',
@@ -32,8 +28,9 @@ export default function Header() {
           <div style={{ color: 'gray' }}>25 minutes ago</div>
         </div>
       </div>
+    )
+  }
 
-  )
   return (
       <div style={{ display: 'flex', flexDirection: 'row', gap: '1em', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '1em' }}>
@@ -84,7 +81,7 @@ export default function Header() {
             <a href="#">
               <i
                 className="fa-solid fa-bell fa-2x"
-                onClick={showMessages}
+                onClick={() => setShowMessages(!showMessages)}
                 style={{ color: '#2C3D51', cursor: 'pointer' }}
               ></i>
             </a>
@@ -92,7 +89,7 @@ export default function Header() {
               className="child"
               id="messages"
               style={{
-                display: 'none',
+                display: showMessages ? 'flex' : 'none',
                 flexDirection: 'column',
                 position: 'absolute',
                 right: '-2.9em',
@@ -104,9 +101,9 @@ export default function Header() {
                 zIndex: 1,
               }}
             >
-              {message(true)}
-              {message(true)}
-              {message(false)}
+              <Message showBorder={true} />
+              <Message showBorder={true} />
+              <Message showBorder={false} />
             </div>
           </div>
           <a href="#">
